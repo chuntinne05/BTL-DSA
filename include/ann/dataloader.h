@@ -14,10 +14,8 @@
 #define DATALOADER_H
 #include "ann/xtensor_lib.h"
 #include "ann/dataset.h"
-// #include<vector>
-#include "list/XArrayList.h"
+// #include "list/XArrayList.h"
 #include<chrono>
-// #include<random>
 using namespace std;
 
 template<typename DType, typename LType>
@@ -29,47 +27,30 @@ private:
     int batch_size;
     bool shuffle;
     bool drop_last;
-    XArrayList<int> indices;
+    xt::xarray<unsigned long> indices;
     size_t current_idx;
 public:
     DataLoader(Dataset<DType, LType>* ptr_dataset,
             int batch_size,
             bool shuffle=true,
             bool drop_last=false) 
-        {
-            /*TODO: Add your code to do the initialization */
-            this->ptr_dataset = ptr_dataset;
-            this->batch_size = batch_size;
-            this->shuffle = shuffle;
-            this->drop_last = drop_last;
-            this->current_idx = 0;
-
+    {
+        /*TODO: Add your code to do the initialization */
+        this->ptr_dataset = ptr_dataset;
+        this->batch_size = batch_size;
+        this->shuffle = shuffle;
+        this->drop_last = drop_last;
+        this->current_idx = 0;
         int dataset_size = ptr_dataset->len();
-        // indices.resize(dataset_size);
-        // iota(indices.begin(), indices.end(), 0); //gan cac gia tri lien tiep tu 0 -> dataset_size vao vector indices
-        for (int i = 0; i < dataset_size; i++)
-        {
-            indices.add(i);
-        }
-        
-        if (shuffle==true)
+        indices = xt::arange<unsigned long> (0, dataset_size);
+        if (shuffle)
         {
             // %%%%%%%%%%%%% BO SINH SO DUNG THOI GIAN HE THONG %%%%%%%%%%%%%%%%
             unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-            mt19937 engine(seed);
-            shuffleList(engine);
-            // shuffle(indices.begin(), indices.end(), engine);
-
-            // %%%%%%%%%%%%% BO SINH SO DUNG SEED MAC DINH
-            // mt19937 engine;
-            // shuffle(indices.begin(), indices.end(), engine);
-
-            // %%%%%%%%%%%%% BO SINH SO SU DUNG RANDOM %%%%%%%%%%%%%
-            // random_device ran;
-            // mt19937 engine(ran);
-            // shuffle(indices.begin(), indices.end.(), engine);
+            xt:random:shuffle(indices, seed);
+            // mt19937 engine(seed);
+            // shuffleList(engine);
         }
-        
     }
     virtual ~DataLoader(){}
 
@@ -80,17 +61,17 @@ public:
     
     /*TODO: Add your code here to support iteration on batch*/
 
-    void shuffleList(mt19937 &engine) {
-        for (int i = indices.size() - 1; i > 0; i--)
-        {
-            uniform_int_distribution<int> distribte(0,i);
-            int j = distribte(engine);
-            int temp = indices.get(i);
-            indices.get(i) = indices.get(j);
-            indices.get(j) = temp;
-        }
+    // void shuffleList(mt19937 &engine) {
+    //     for (int i = indices.size() - 1; i > 0; i--)
+    //     {
+    //         uniform_int_distribution<int> distribte(0,i);
+    //         int j = distribte(engine);
+    //         int temp = indices.get(i);
+    //         indices.get(i) = indices.get(j);
+    //         indices.get(j) = temp;
+    //     }
         
-    }
+    // }
     class Iterator {
 
     private: 

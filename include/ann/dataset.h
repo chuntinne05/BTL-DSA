@@ -82,8 +82,16 @@ public:
      */
     DataLabel<DType, LType> getitem(int index){
         xt::xarray<DType> singleData = xt::view(data, index, xt::all());
-        xt::xarray<LType> singleLabel = xt::view(label, index, xt::all());
-        return DataLabel<DType, LType> (singleData, singleLabel);
+
+        if (label_shape[0] > 0 )    
+        {
+            xt:array<DType> singleLabel = xt::view(label, index, xt::all());
+            return DataLabel<DType, LType>(singleData, singleLabel); 
+        }
+        else
+        {
+            return DataLabel<DType, LType>(singleData, xt::array<LType>());
+        }
     }
     
     xt::svector<unsigned long> get_data_shape(){
