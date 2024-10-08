@@ -16,8 +16,8 @@
 
 #include <iostream>
 #include <iomanip>
-#include "list/DLinkedList.h"
-#include "util/Point.h"
+#include "DLinkedList.h"
+#include "../util/Point.h"
 using namespace std;
 
 void dlistDemo1(){

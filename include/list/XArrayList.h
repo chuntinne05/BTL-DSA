@@ -265,8 +265,9 @@ void XArrayList<T>::add(T e)
 template <class T>
 void XArrayList<T>::add(int index, T e)
 {
-    checkIndex(index);
     ensureCapacity(this->count + 1);
+    checkIndex(index);
+    // ensureCapacity(this->count + 1);
     for (int i = this->count; i > index; i--)
     {
         this->data[i] = this->data[i - 1];
